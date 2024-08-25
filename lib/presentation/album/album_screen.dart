@@ -33,17 +33,16 @@ class _AlbumScreenState extends State<AlbumScreen> {
       ),
       body: _image == null
           ? const Center(
-              child: Text('No Images'),
+              child: Text('선택된 이미지가 없습니다'),
             )
           : Column(
               children: [
                 Image.file(_image!),
                 TextButton(
-                  onPressed: () {
-                    context.go('/editing');
-                  },
-                  child: const Text('편집'),
-                ),
+                    onPressed: () {
+                      context.go('/editing');
+                    },
+                    child: const Text('편집'))
               ],
             ),
       floatingActionButton: FloatingActionButton(
