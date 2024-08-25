@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_image_cropper/core/router/router.dart';
 import 'package:go_router/go_router.dart';
 
 class MainScreen extends StatelessWidget {
