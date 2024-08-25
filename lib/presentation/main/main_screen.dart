@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_image_cropper/core/router/router.dart';
+import 'package:go_router/go_router.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
@@ -6,7 +8,7 @@ class MainScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: const Center(
+      body: Center(
         child: SizedBox(
           height: 300,
           child: Row(
@@ -15,16 +17,26 @@ class MainScreen extends StatelessWidget {
               Expanded(
                 child: Column(
                   children: [
-                    Icon(Icons.image),
-                    Text('앨범'),
+                    IconButton(
+                      onPressed: () {
+                        context.go('/album');
+                      },
+                      icon: const Icon(Icons.image),
+                    ),
+                    const Text('앨범'),
                   ],
                 ),
               ),
               Expanded(
                 child: Column(
                   children: [
-                    Icon(Icons.camera_alt),
-                    Text('카메라'),
+                    IconButton(
+                      onPressed: () {
+                        context.go('/camera');
+                      },
+                      icon: const Icon(Icons.camera_alt),
+                    ),
+                    const Text('카메라'),
                   ],
                 ),
               )
@@ -33,9 +45,26 @@ class MainScreen extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: NavigationBar(
-        destinations: const [
-          NavigationDestination(icon: Icon(Icons.edit), label: '편집'),
-          NavigationDestination(icon: Icon(Icons.image), label: '편집된 이미지'),
+        onDestinationSelected: (value) {},
+        destinations: [
+          NavigationDestination(
+            icon: IconButton(
+              onPressed: () {
+                context.go('/');
+              },
+              icon: const Icon(Icons.edit),
+            ),
+            label: '편집',
+          ),
+          NavigationDestination(
+            icon: IconButton(
+              onPressed: () {
+                context.go('/edited');
+              },
+              icon: const Icon(Icons.image),
+            ),
+            label: '편집된 이미지',
+          ),
         ],
       ),
     );
