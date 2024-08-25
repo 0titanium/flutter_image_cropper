@@ -5,8 +5,8 @@ class MainScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
+    return Scaffold(
+      body: const Center(
         child: SizedBox(
           height: 300,
           child: Row(
@@ -31,6 +31,12 @@ class MainScreen extends StatelessWidget {
             ],
           ),
         ),
+      ),
+      bottomNavigationBar: NavigationBar(
+        destinations: const [
+          NavigationDestination(icon: Icon(Icons.edit), label: '편집'),
+          NavigationDestination(icon: Icon(Icons.image), label: '편집된 이미지'),
+        ],
       ),
     );
   }
