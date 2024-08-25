@@ -40,7 +40,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
                 Image.file(_image!),
                 TextButton(
                     onPressed: () {
-                      context.go('/editing');
+                      context.go('/album/editing', extra: _image);
                     },
                     child: const Text('편집'))
               ],
