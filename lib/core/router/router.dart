@@ -1,6 +1,7 @@
 import 'package:flutter_image_cropper/presentation/album/album_screen.dart';
 import 'package:flutter_image_cropper/presentation/camera/camera_screen.dart';
 import 'package:flutter_image_cropper/presentation/edited/edited_screen.dart';
+import 'package:flutter_image_cropper/presentation/editing/editing_screen.dart';
 import 'package:flutter_image_cropper/presentation/main/main_screen.dart';
 import 'package:go_router/go_router.dart';
 
@@ -16,6 +17,12 @@ final GoRouter router = GoRouter(
           path: 'album',
           builder: (context, state) {
             return const AlbumScreen();
+          },
+        ),
+        GoRoute(
+          path: 'editing',
+          builder: (context, state) {
+            return const EditingScreen();
           },
         ),
         GoRoute(
