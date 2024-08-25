@@ -18,12 +18,14 @@ final GoRouter router = GoRouter(
           builder: (context, state) {
             return const AlbumScreen();
           },
-        ),
-        GoRoute(
-          path: 'editing',
-          builder: (context, state) {
-            return const EditingScreen();
-          },
+          routes: <RouteBase>[
+            GoRoute(
+              path: 'editing',
+              builder: (context, state) {
+                return const EditingScreen();
+              },
+            ),
+          ],
         ),
         GoRoute(
           path: 'camera',
