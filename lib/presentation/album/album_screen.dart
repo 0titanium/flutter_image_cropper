@@ -88,12 +88,18 @@ class _AlbumScreenState extends State<AlbumScreen> {
                 _croppedFile == null
                     ? Image.file(_image!)
                     : Image.file(File(_croppedFile!.path)),
-                TextButton(
-                    onPressed: () {
-                      // context.go('/album/editing');
-                      _cropImage();
-                    },
-                    child: const Text('편집'))
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextButton(
+                        onPressed: () {
+                          // context.go('/album/editing');
+                          _cropImage();
+                        },
+                        child: const Text('편집')),
+                    TextButton(onPressed: () {}, child: const Text('저장')),
+                  ],
+                )
               ],
             ),
       floatingActionButton: FloatingActionButton(
