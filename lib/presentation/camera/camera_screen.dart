@@ -68,15 +68,15 @@ class _CameraScreenState extends State<CameraScreen> {
           if (snapshot.connectionState == ConnectionState.done) {
             return controller != null
                 ? CameraPreview(controller!)
-                : Center(child: Text('Camera not available'));
+                : const Center(child: Text('Camera not available'));
           } else {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
         },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _takePicture,
-        child: Icon(Icons.camera),
+        child: const Icon(Icons.camera),
       ),
     );
   }
