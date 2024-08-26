@@ -1,6 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_cropper/core/camera/camera_service.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_cropper/image_cropper.dart';
 
 class CameraScreen extends StatefulWidget {
@@ -133,6 +134,9 @@ class _CameraScreenState extends State<CameraScreen> {
         ],
       );
       if (croppedFile != null) {
+        if (mounted) {
+          context.go('/camera/editingResult', extra: croppedFile);
+        }
         setState(() {
           _croppedFile = croppedFile;
         });
