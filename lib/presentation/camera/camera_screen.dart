@@ -1,6 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_cropper/core/camera/camera_service.dart';
+import 'package:image_cropper/image_cropper.dart';
 
 class CameraScreen extends StatefulWidget {
   const CameraScreen({super.key});
@@ -14,6 +15,7 @@ class _CameraScreenState extends State<CameraScreen> {
   Future<void>? _initializeControllerFuture;
   List<CameraDescription> cameras = [];
   int selectedCameraIndex = 0;
+  CroppedFile? _croppedFile; // 크롭된 이미지 파일
 
   @override
   void initState() {
@@ -94,6 +96,48 @@ class _CameraScreenState extends State<CameraScreen> {
     try {
       XFile picture = await controller!.takePicture();
       print('Picture taken: ${picture.path}');
+
+      final croppedFile = await ImageCropper().cropImage(
+        sourcePath: picture.path,
+        compressFormat: ImageCompressFormat.jpg,
+        compressQuality: 100,
+        uiSettings: [
+          AndroidUiSettings(
+            toolbarTitle: 'Cropper',
+            toolbarColor: Colors.deepOrange,
+            toolbarWidgetColor: Colors.white,
+            initAspectRatio: CropAspectRatioPreset.square,
+            lockAspectRatio: false,
+            aspectRatioPresets: [
+              CropAspectRatioPreset.original,
+              CropAspectRatioPreset.square,
+              CropAspectRatioPreset.ratio4x3,
+            ],
+          ),
+          IOSUiSettings(
+            title: 'Cropper',
+            aspectRatioPresets: [
+              CropAspectRatioPreset.original,
+              CropAspectRatioPreset.square,
+              CropAspectRatioPreset.ratio4x3,
+            ],
+          ),
+          WebUiSettings(
+            context: context,
+            presentStyle: WebPresentStyle.dialog,
+            size: const CropperSize(
+              width: 520,
+              height: 520,
+            ),
+          ),
+        ],
+      );
+      if (croppedFile != null) {
+        setState(() {
+          _croppedFile = croppedFile;
+        });
+      }
+
     } catch (e) {
       print('Error taking picture: $e');
     }
