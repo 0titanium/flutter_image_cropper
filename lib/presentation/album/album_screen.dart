@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -66,6 +67,9 @@ class _AlbumScreenState extends State<AlbumScreen> {
         ],
       );
       if (croppedFile != null) {
+        if (mounted) {
+          context.go('/album/editingResult', extra: croppedFile);
+        }
         setState(() {
           _croppedFile = croppedFile;
         });
@@ -88,18 +92,11 @@ class _AlbumScreenState extends State<AlbumScreen> {
                 _croppedFile == null
                     ? Image.file(_image!)
                     : Image.file(File(_croppedFile!.path)),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    TextButton(
-                        onPressed: () {
-                          // context.go('/album/editing');
-                          _cropImage();
-                        },
-                        child: const Text('편집')),
-                    TextButton(onPressed: () {}, child: const Text('저장')),
-                  ],
-                )
+                TextButton(
+                    onPressed: () {
+                      _cropImage();
+                    },
+                    child: const Text('편집'))
               ],
             ),
       floatingActionButton: FloatingActionButton(
