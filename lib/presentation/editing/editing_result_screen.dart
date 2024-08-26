@@ -34,6 +34,11 @@ class _EditingResultScreenState extends State<EditingResultScreen> {
       body: Center(
         child: Image.file(File(croppedFile!.path)),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        tooltip: '저장',
+        child: const Icon(Icons.save),
+      ),
     );
   }
 }
