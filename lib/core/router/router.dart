@@ -33,6 +33,14 @@ final GoRouter router = GoRouter(
           builder: (context, state) {
             return const CameraScreen();
           },
+          routes: <RouteBase>[
+            GoRoute(
+              path: 'editingResult',
+              builder: (context, state) {
+                return EditingResultScreen(image: state.extra as CroppedFile);
+              },
+            ),
+          ],
         ),
         GoRoute(
           path: 'edited',
