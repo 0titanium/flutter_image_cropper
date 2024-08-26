@@ -12,6 +12,8 @@ class CameraScreen extends StatefulWidget {
 class _CameraScreenState extends State<CameraScreen> {
   CameraController? controller;
   Future<void>? _initializeControllerFuture;
+  List<CameraDescription> cameras = [];
+  int selectedCameraIndex = 0;
 
   @override
   void initState() {
@@ -20,20 +22,61 @@ class _CameraScreenState extends State<CameraScreen> {
   }
 
   Future<void> _initializeCamera() async {
-    final cameraService = CameraService();
-    final cameras = await cameraService.getCameras();
+    try {
+      final cameraService = CameraService();
+      cameras = await cameraService.getCameras();
 
-    if (cameras.isNotEmpty) {
-      controller = CameraController(cameras[0], ResolutionPreset.high);
-
-      _initializeControllerFuture = controller?.initialize();
-
-      try {
-        await _initializeControllerFuture;
-        setState(() {});
-      } catch (e) {
-        print('Camera initialization failed: $e');
+      if (cameras.isNotEmpty) {
+        selectedCameraIndex = 0;
+        await _initCameraController(cameras[selectedCameraIndex]);
+      } else {
+        print('No cameras available');
       }
+    } catch (e) {
+      print('Error initializing camera: $e');
+    }
+  }
+
+  Future<void> _initCameraController(
+      CameraDescription cameraDescription) async {
+    if (controller != null) {
+      await controller!.dispose();
+    }
+
+    controller = CameraController(cameraDescription, ResolutionPreset.high);
+
+    try {
+      _initializeControllerFuture = controller!.initialize();
+      await _initializeControllerFuture;
+    } catch (e) {
+      print('Error initializing camera controller: $e');
+    }
+
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  void _switchCamera() async {
+    if (cameras.length > 1) {
+      setState(() {
+        _initializeControllerFuture =
+            null; // 임시로 null로 설정하여 dispose된 컨트롤러를 사용하지 않도록 함
+      });
+
+      selectedCameraIndex = selectedCameraIndex == 0 ? 1 : 0;
+      await _initCameraController(cameras[selectedCameraIndex]);
+
+      if (mounted) {
+        setState(() {
+          // 새 카메라 컨트롤러가 초기화된 후 UI를 다시 빌드
+          _initializeControllerFuture = controller!.initialize();
+        });
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('보조 카메라가 없습니다')),
+      );
     }
   }
 
@@ -67,7 +110,21 @@ class _CameraScreenState extends State<CameraScreen> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             return controller != null
-                ? CameraPreview(controller!)
+                ? Stack(
+                    children: [
+                      CameraPreview(controller!),
+                      Align(
+                        alignment: Alignment.bottomLeft,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: FloatingActionButton(
+                            onPressed: _switchCamera,
+                            child: const Icon(Icons.switch_camera),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
                 : const Center(child: Text('Camera not available'));
           } else {
             return const Center(child: CircularProgressIndicator());
