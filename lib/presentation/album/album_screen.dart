@@ -86,7 +86,9 @@ class _AlbumScreenState extends State<AlbumScreen> {
             )
           : Column(
               children: [
-                Image.file(_image!),
+                _croppedFile == null
+                    ? Image.file(_image!)
+                    : Image.file(File(_croppedFile!.path)),
                 TextButton(
                     onPressed: () {
                       // context.go('/album/editing');
