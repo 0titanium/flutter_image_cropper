@@ -26,7 +26,9 @@ class _EditingResultScreenState extends State<EditingResultScreen> {
         child: Image.file(File(viewModel.croppedFile!.path)),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: viewModel.saveImage,
+        onPressed: () {
+          viewModel.saveImage(context);
+        },
         tooltip: '저장',
         child: const Icon(Icons.save),
       ),
