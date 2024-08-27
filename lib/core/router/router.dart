@@ -1,4 +1,5 @@
 import 'package:flutter_image_cropper/presentation/album/album_screen.dart';
+import 'package:flutter_image_cropper/presentation/album/album_view_model.dart';
 import 'package:flutter_image_cropper/presentation/camera/camera_screen.dart';
 import 'package:flutter_image_cropper/presentation/edited/edited_screen.dart';
 import 'package:flutter_image_cropper/presentation/editing/editing_result_screen.dart';
@@ -6,6 +7,7 @@ import 'package:flutter_image_cropper/presentation/main/main_screen.dart';
 import 'package:flutter_image_cropper/presentation/result_detail/result_detail_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_cropper/image_cropper.dart';
+import 'package:provider/provider.dart';
 
 final GoRouter router = GoRouter(
   routes: <RouteBase>[
@@ -18,7 +20,10 @@ final GoRouter router = GoRouter(
         GoRoute(
           path: 'album',
           builder: (context, state) {
-            return const AlbumScreen();
+            return ChangeNotifierProvider(
+              create: (_) => AlbumViewModel(),
+              child: const AlbumScreen(),
+            );
           },
           routes: <RouteBase>[
             GoRoute(
