@@ -1,6 +1,7 @@
 import 'package:flutter_image_cropper/presentation/album/album_screen.dart';
 import 'package:flutter_image_cropper/presentation/album/album_view_model.dart';
 import 'package:flutter_image_cropper/presentation/camera/camera_screen.dart';
+import 'package:flutter_image_cropper/presentation/camera/camera_view_model.dart';
 import 'package:flutter_image_cropper/presentation/edited/edited_screen.dart';
 import 'package:flutter_image_cropper/presentation/editing/editing_result_screen.dart';
 import 'package:flutter_image_cropper/presentation/main/main_screen.dart';
@@ -37,7 +38,10 @@ final GoRouter router = GoRouter(
         GoRoute(
           path: 'camera',
           builder: (context, state) {
-            return const CameraScreen();
+            return ChangeNotifierProvider(
+              create: (_) => CameraViewModel(),
+              child: const CameraScreen(),
+            );
           },
           routes: <RouteBase>[
             GoRoute(
