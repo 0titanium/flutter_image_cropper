@@ -27,7 +27,7 @@ class _EditedScreenState extends State<EditedScreen> {
     );
 
     setState(() {
-      _imageUrls = urlList;
+      _imageUrls = urlList.reversed.toList();
     });
   }
 
