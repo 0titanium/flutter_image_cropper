@@ -4,6 +4,7 @@ import 'package:flutter_image_cropper/presentation/camera/camera_screen.dart';
 import 'package:flutter_image_cropper/presentation/camera/camera_view_model.dart';
 import 'package:flutter_image_cropper/presentation/edited/edited_screen.dart';
 import 'package:flutter_image_cropper/presentation/editing/editing_result_screen.dart';
+import 'package:flutter_image_cropper/presentation/editing/editing_result_view_model.dart';
 import 'package:flutter_image_cropper/presentation/main/main_screen.dart';
 import 'package:flutter_image_cropper/presentation/result_detail/result_detail_screen.dart';
 import 'package:go_router/go_router.dart';
@@ -30,7 +31,13 @@ final GoRouter router = GoRouter(
             GoRoute(
               path: 'editingResult',
               builder: (context, state) {
-                return EditingResultScreen(image: state.extra as CroppedFile);
+                return ChangeNotifierProvider(
+                  create: (_) => EditingResultViewModel(
+                    croppedFile: state.extra as CroppedFile,
+                  ),
+                  child: const EditingResultScreen(),
+                );
+                // EditingResultScreen(image: state.extra as CroppedFile);
               },
             ),
           ],
@@ -47,7 +54,12 @@ final GoRouter router = GoRouter(
             GoRoute(
               path: 'editingResult',
               builder: (context, state) {
-                return EditingResultScreen(image: state.extra as CroppedFile);
+                return ChangeNotifierProvider(
+                  create: (_) => EditingResultViewModel(
+                    croppedFile: state.extra as CroppedFile,
+                  ),
+                  child: const EditingResultScreen(),
+                );
               },
             ),
           ],
