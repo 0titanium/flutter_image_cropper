@@ -1,9 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:image_cropper/image_cropper.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:flutter_image_cropper/presentation/album/album_view_model.dart';
+import 'package:provider/provider.dart';
 
 class AlbumScreen extends StatefulWidget {
   const AlbumScreen({super.key});
@@ -13,94 +12,32 @@ class AlbumScreen extends StatefulWidget {
 }
 
 class _AlbumScreenState extends State<AlbumScreen> {
-  File? _image;
-
-  // XFile? _pickedFile; // 선택된 이미지 파일
-  CroppedFile? _croppedFile; // 크롭된 이미지 파일
-
-  Future<void> _pickImage() async {
-    final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
-      setState(() {
-        _image = File(pickedFile.path);
-      });
-    }
-  }
-
-  Future<void> _cropImage() async {
-    if (_image != null) {
-      final croppedFile = await ImageCropper().cropImage(
-        sourcePath: _image!.path,
-        compressFormat: ImageCompressFormat.jpg,
-        compressQuality: 100,
-        uiSettings: [
-          AndroidUiSettings(
-            toolbarTitle: 'Cropper',
-            toolbarColor: Colors.deepOrange,
-            toolbarWidgetColor: Colors.white,
-            initAspectRatio: CropAspectRatioPreset.square,
-            lockAspectRatio: false,
-            aspectRatioPresets: [
-              CropAspectRatioPreset.original,
-              CropAspectRatioPreset.square,
-              CropAspectRatioPreset.ratio4x3,
-            ],
-          ),
-          IOSUiSettings(
-            title: 'Cropper',
-            aspectRatioPresets: [
-              CropAspectRatioPreset.original,
-              CropAspectRatioPreset.square,
-              CropAspectRatioPreset.ratio4x3,
-            ],
-          ),
-          WebUiSettings(
-            context: context,
-            presentStyle: WebPresentStyle.dialog,
-            size: const CropperSize(
-              width: 520,
-              height: 520,
-            ),
-          ),
-        ],
-      );
-      if (croppedFile != null) {
-        if (mounted) {
-          context.go('/album/editingResult', extra: croppedFile);
-        }
-        setState(() {
-          _croppedFile = croppedFile;
-        });
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    final viewModel = context.watch<AlbumViewModel>();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Album'),
       ),
-      body: _image == null
+      body: viewModel.image == null
           ? const Center(
               child: Text('선택된 이미지가 없습니다'),
             )
           : Column(
               children: [
-                _croppedFile == null
-                    ? Image.file(_image!)
-                    : Image.file(File(_croppedFile!.path)),
+                viewModel.croppedFile == null
+                    ? Image.file(viewModel.image!)
+                    : Image.file(File(viewModel.croppedFile!.path)),
                 TextButton(
                     onPressed: () {
-                      _cropImage();
+                      viewModel.cropImage(context);
                     },
                     child: const Text('편집'))
               ],
             ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _pickImage,
+        onPressed: viewModel.pickImage,
         tooltip: '이미지 선택',
         child: const Icon(Icons.add_a_photo),
       ),
