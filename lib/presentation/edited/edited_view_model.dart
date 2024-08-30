@@ -1,7 +1,14 @@
 import 'package:flutter/foundation.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_image_cropper/data/image_data_source.dart';
 
 class EditedViewModel extends ChangeNotifier {
+  final ImageDataSource _imageDataSource;
+
+  EditedViewModel({
+    required ImageDataSource imageDataSource,
+  }) : _imageDataSource = imageDataSource;
+
   List<String> _imageUrls = [];
 
   List<String> get imageUrls => _imageUrls;
@@ -15,12 +22,7 @@ class EditedViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final ListResult result =
-          await FirebaseStorage.instance.ref('images').listAll();
-
-      final List<String> urlList = await Future.wait(
-        result.items.map((ref) => ref.getDownloadURL()),
-      );
+      final List<String> urlList = await _imageDataSource.getImageListAll();
 
       _imageUrls = urlList.reversed.toList();
     } catch (e) {
