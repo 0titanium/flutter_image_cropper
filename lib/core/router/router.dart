@@ -1,3 +1,4 @@
+import 'package:flutter_image_cropper/core/pick_image/crop_image_service.dart';
 import 'package:flutter_image_cropper/data/image_data_source.dart';
 import 'package:flutter_image_cropper/presentation/main/main_screen.dart';
 import 'package:flutter_image_cropper/presentation/main/main_view_model.dart';
@@ -11,8 +12,10 @@ final GoRouter router = GoRouter(
       path: '/',
       builder: (context, state) {
         return ChangeNotifierProvider(
-          create: (_) =>
-              MainViewModel(imageDataSource: ImageDataSource())..loadImages(),
+          create: (_) => MainViewModel(
+            imageDataSource: ImageDataSource(),
+            cropImageService: CropImageService(),
+          )..loadImages(),
           child: const MainScreen(),
         );
       },
