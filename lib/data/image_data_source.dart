@@ -25,8 +25,6 @@ class ImageDataSource {
 
     try {
       await storageReference.putFile(File(croppedFile.path));
-      // context.go('/edited');
-      // notifyListeners();
     } catch (e) {
       print('Error uploading image: $e');
     }
