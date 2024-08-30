@@ -24,7 +24,7 @@ class ImageDataSource {
         FirebaseStorage.instance.ref().child('images/$fileName.jpg');
 
     try {
-      await storageReference.putFile(File(croppedFile!.path));
+      await storageReference.putFile(File(croppedFile.path));
       // context.go('/edited');
       // notifyListeners();
     } catch (e) {
