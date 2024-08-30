@@ -13,7 +13,16 @@ class MainScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Images'),
-        centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: viewModel.pickImage,
+            icon: const Icon(Icons.photo_album),
+          ),
+          IconButton(
+            onPressed: viewModel.pickImageFromPhoto,
+            icon: const Icon(Icons.add_a_photo),
+          ),
+        ],
       ),
       body: viewModel.isLoading
           ? const Center(
