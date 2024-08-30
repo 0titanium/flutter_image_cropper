@@ -15,11 +15,15 @@ class MainScreen extends StatelessWidget {
         title: const Text('Images'),
         actions: [
           IconButton(
-            onPressed: viewModel.pickImage,
+            onPressed: () {
+              viewModel.pickImage('album');
+            },
             icon: const Icon(Icons.photo_album),
           ),
           IconButton(
-            onPressed: viewModel.pickImageFromPhoto,
+            onPressed: () {
+              viewModel.pickImage('takingPhoto');
+            },
             icon: const Icon(Icons.add_a_photo),
           ),
         ],
