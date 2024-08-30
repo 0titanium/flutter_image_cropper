@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_cropper/image_cropper.dart';
 
 class ImageDataSource {
   Future<List<String>> getImageListAll() async {
@@ -10,5 +13,22 @@ class ImageDataSource {
     );
 
     return urlList;
+  }
+
+  Future<void> saveImage(CroppedFile? croppedFile) async {
+    if (croppedFile == null) return;
+
+    final fileName = DateTime.now().millisecondsSinceEpoch.toString();
+
+    final Reference storageReference =
+        FirebaseStorage.instance.ref().child('images/$fileName.jpg');
+
+    try {
+      await storageReference.putFile(File(croppedFile!.path));
+      // context.go('/edited');
+      // notifyListeners();
+    } catch (e) {
+      print('Error uploading image: $e');
+    }
   }
 }
