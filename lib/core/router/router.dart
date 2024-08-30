@@ -1,3 +1,4 @@
+import 'package:flutter_image_cropper/data/image_data_source.dart';
 import 'package:flutter_image_cropper/presentation/album/album_screen.dart';
 import 'package:flutter_image_cropper/presentation/album/album_view_model.dart';
 import 'package:flutter_image_cropper/presentation/camera/camera_screen.dart';
@@ -68,7 +69,9 @@ final GoRouter router = GoRouter(
           path: 'edited',
           builder: (context, state) {
             return ChangeNotifierProvider(
-              create: (_) => EditedViewModel()..loadImages(),
+              create: (_) => EditedViewModel(
+                imageDataSource: ImageDataSource(),
+              )..loadImages(),
               child: const EditedScreen(),
             );
           },
