@@ -1,16 +1,19 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_image_cropper/core/pick_image/crop_image_service.dart';
 import 'package:flutter_image_cropper/data/image_data_source.dart';
-import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
 class MainViewModel extends ChangeNotifier {
   final ImageDataSource _imageDataSource;
+  final CropImageService _cropImageService;
 
   MainViewModel({
     required ImageDataSource imageDataSource,
-  }) : _imageDataSource = imageDataSource;
+    required CropImageService cropImageService,
+  })  : _imageDataSource = imageDataSource,
+        _cropImageService = cropImageService;
 
   // vars firebase storage
   List<String> _imageUrls = [];
@@ -57,33 +60,8 @@ class MainViewModel extends ChangeNotifier {
 
   Future<void> cropImage() async {
     if (_image != null) {
-      final croppedFile = await ImageCropper().cropImage(
-        sourcePath: _image!.path,
-        compressFormat: ImageCompressFormat.jpg,
-        compressQuality: 100,
-        uiSettings: [
-          AndroidUiSettings(
-            toolbarTitle: 'Cropper',
-            toolbarColor: Colors.deepOrange,
-            toolbarWidgetColor: Colors.white,
-            initAspectRatio: CropAspectRatioPreset.square,
-            lockAspectRatio: false,
-            aspectRatioPresets: [
-              CropAspectRatioPreset.original,
-              CropAspectRatioPreset.square,
-              CropAspectRatioPreset.ratio4x3,
-            ],
-          ),
-          IOSUiSettings(
-            title: 'Cropper',
-            aspectRatioPresets: [
-              CropAspectRatioPreset.original,
-              CropAspectRatioPreset.square,
-              CropAspectRatioPreset.ratio4x3,
-            ],
-          ),
-        ],
-      );
+      final croppedFile = await _cropImageService.cropImage(_image!);
+
       if (croppedFile != null) {
         await _imageDataSource.saveImage(croppedFile);
         loadImages();
