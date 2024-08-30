@@ -1,4 +1,4 @@
-import 'package:flutter_image_cropper/core/pick_image/crop_image_service.dart';
+import 'package:flutter_image_cropper/core/crop_image/crop_image_service.dart';
 import 'package:flutter_image_cropper/data/image_data_source.dart';
 import 'package:flutter_image_cropper/presentation/main/main_screen.dart';
 import 'package:flutter_image_cropper/presentation/main/main_view_model.dart';

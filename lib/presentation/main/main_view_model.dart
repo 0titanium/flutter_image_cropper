@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_image_cropper/core/pick_image/crop_image_service.dart';
+import 'package:flutter_image_cropper/core/crop_image/crop_image_service.dart';
 import 'package:flutter_image_cropper/data/image_data_source.dart';
 import 'package:image_picker/image_picker.dart';
 
