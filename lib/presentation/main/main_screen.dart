@@ -1,71 +1,57 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_image_cropper/presentation/main/main_view_model.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final viewModel = context.watch<MainViewModel>();
+
     return Scaffold(
-      body: Center(
-        child: SizedBox(
-          height: 300,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Column(
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        context.go('/album');
-                      },
-                      icon: const Icon(Icons.image),
-                    ),
-                    const Text('앨범'),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: Column(
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        context.go('/camera');
-                      },
-                      icon: const Icon(Icons.camera_alt),
-                    ),
-                    const Text('카메라'),
-                  ],
-                ),
-              )
-            ],
+      appBar: AppBar(
+        title: const Text('Images'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              viewModel.pickImage('album');
+            },
+            icon: const Icon(Icons.photo_album),
           ),
-        ),
-      ),
-      bottomNavigationBar: NavigationBar(
-        onDestinationSelected: (value) {},
-        destinations: [
-          NavigationDestination(
-            icon: IconButton(
-              onPressed: () {
-                context.go('/');
-              },
-              icon: const Icon(Icons.edit),
-            ),
-            label: '편집',
-          ),
-          NavigationDestination(
-            icon: IconButton(
-              onPressed: () {
-                context.go('/edited');
-              },
-              icon: const Icon(Icons.image),
-            ),
-            label: '편집된 이미지',
+          IconButton(
+            onPressed: () {
+              viewModel.pickImage('takingPhoto');
+            },
+            icon: const Icon(Icons.add_a_photo),
           ),
         ],
       ),
+      body: viewModel.isLoading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                crossAxisSpacing: 4.0,
+                mainAxisSpacing: 4.0,
+              ),
+              itemCount: viewModel.imageUrls.length,
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                  onTap: () {
+                    context.go('/resultDetail',
+                        extra: viewModel.imageUrls[index]);
+                  },
+                  child: Image.network(
+                    viewModel.imageUrls[index],
+                    fit: BoxFit.cover,
+                  ),
+                );
+              },
+            ),
     );
   }
 }

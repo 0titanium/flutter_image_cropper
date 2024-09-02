@@ -1,15 +1,21 @@
 import 'dart:io';
+
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:image_cropper/image_cropper.dart';
 
-class EditingResultViewModel extends ChangeNotifier {
-  CroppedFile? croppedFile;
+class ImageDataSource {
+  Future<List<String>> getImageListAll() async {
+    final ListResult result =
+        await FirebaseStorage.instance.ref('images').listAll();
 
-  EditingResultViewModel({required this.croppedFile});
+    final List<String> urlList = await Future.wait(
+      result.items.map((ref) => ref.getDownloadURL()),
+    );
 
-  Future<void> saveImage(BuildContext context) async {
+    return urlList;
+  }
+
+  Future<void> saveImage(CroppedFile? croppedFile) async {
     if (croppedFile == null) return;
 
     final fileName = DateTime.now().millisecondsSinceEpoch.toString();
@@ -18,9 +24,7 @@ class EditingResultViewModel extends ChangeNotifier {
         FirebaseStorage.instance.ref().child('images/$fileName.jpg');
 
     try {
-      await storageReference.putFile(File(croppedFile!.path));
-      context.go('/edited');
-      notifyListeners();
+      await storageReference.putFile(File(croppedFile.path));
     } catch (e) {
       print('Error uploading image: $e');
     }
