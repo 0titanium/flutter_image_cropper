@@ -1,12 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 class ResultDetailScreen extends StatelessWidget {
   const ResultDetailScreen({
     super.key,
-    required this.imageUrl,
+    required this.image,
   });
 
-  final String imageUrl;
+  final File image;
 
   @override
   Widget build(BuildContext context) {
@@ -15,8 +17,8 @@ class ResultDetailScreen extends StatelessWidget {
         title: const Text('detail'),
       ),
       body: Center(
-        child: Image.network(
-          imageUrl,
+        child: Image.file(
+          image,
         ),
       ),
     );
