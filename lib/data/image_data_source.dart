@@ -15,8 +15,8 @@ class ImageDataSource {
     return urlList;
   }
 
-  Future<void> saveImage(CroppedFile? croppedFile) async {
-    if (croppedFile == null) return;
+  Future<String?> saveImage(CroppedFile? croppedFile) async {
+    if (croppedFile == null) return null;
 
     final fileName = DateTime.now().millisecondsSinceEpoch.toString();
 
@@ -25,8 +25,10 @@ class ImageDataSource {
 
     try {
       await storageReference.putFile(File(croppedFile.path));
+      return await storageReference.getDownloadURL();
     } catch (e) {
       print('Error uploading image: $e');
+      return null;
     }
   }
 }
