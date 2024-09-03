@@ -43,10 +43,10 @@ class MainScreen extends StatelessWidget {
                 return GestureDetector(
                   onTap: () {
                     context.go('/resultDetail',
-                        extra: viewModel.imageUrls[index]);
+                        extra: viewModel.cachedImageFiles[index]);
                   },
-                  child: Image.network(
-                    viewModel.imageUrls[index],
+                  child: Image.file(
+                    viewModel.cachedImageFiles[index],
                     fit: BoxFit.cover,
                   ),
                 );
