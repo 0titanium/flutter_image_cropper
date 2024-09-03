@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter_image_cropper/core/crop_image/crop_image_service.dart';
+import 'package:flutter_image_cropper/core/image_caching/ImageCachingService.dart';
 import 'package:flutter_image_cropper/data/image_data_source.dart';
 import 'package:flutter_image_cropper/presentation/main/main_screen.dart';
 import 'package:flutter_image_cropper/presentation/main/main_view_model.dart';
@@ -15,7 +18,8 @@ final GoRouter router = GoRouter(
           create: (_) => MainViewModel(
             imageDataSource: ImageDataSource(),
             cropImageService: CropImageService(),
-          )..loadImages(),
+            imageCachingService: ImageCachingService(),
+          ),
           child: const MainScreen(),
         );
       },
@@ -23,7 +27,7 @@ final GoRouter router = GoRouter(
         GoRoute(
           path: 'resultDetail',
           builder: (context, state) {
-            return ResultDetailScreen(imageUrl: state.extra as String);
+            return ResultDetailScreen(image: state.extra as File);
           },
         ),
       ],
