@@ -2,18 +2,28 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_image_cropper/core/crop_image/crop_image_service.dart';
+import 'package:flutter_image_cropper/core/image_caching/ImageCachingService.dart';
 import 'package:flutter_image_cropper/data/image_data_source.dart';
 import 'package:image_picker/image_picker.dart';
 
 class MainViewModel extends ChangeNotifier {
   final ImageDataSource _imageDataSource;
   final CropImageService _cropImageService;
+  final ImageCachingService _imageCachingService;
 
   MainViewModel({
     required ImageDataSource imageDataSource,
     required CropImageService cropImageService,
+    required ImageCachingService imageCachingService,
   })  : _imageDataSource = imageDataSource,
-        _cropImageService = cropImageService;
+        _cropImageService = cropImageService,
+        _imageCachingService = imageCachingService {
+    loadImages();
+  }
+
+  List<File> _cachedImageFiles = [];
+
+  List<File> get cachedImageFiles => _cachedImageFiles;
 
   // vars firebase storage
   List<String> _imageUrls = [];
@@ -34,6 +44,9 @@ class MainViewModel extends ChangeNotifier {
 
     try {
       final List<String> urlList = await _imageDataSource.getImageListAll();
+
+      _cachedImageFiles = await Future.wait(
+          urlList.map((url) => _imageCachingService.getCachedImage(url)));
 
       _imageUrls = urlList;
     } catch (e) {
@@ -63,8 +76,18 @@ class MainViewModel extends ChangeNotifier {
       final croppedFile = await _cropImageService.cropImage(_image!);
 
       if (croppedFile != null) {
-        await _imageDataSource.saveImage(croppedFile);
-        loadImages();
+        final newImageUrl = await _imageDataSource.saveImage(croppedFile);
+
+        if (newImageUrl != null) {
+          _imageUrls.add(newImageUrl);
+
+          final cachedFile =
+              await _imageCachingService.getCachedImage(newImageUrl);
+
+          _cachedImageFiles.add(cachedFile);
+
+          notifyListeners();
+        }
       }
     }
   }
